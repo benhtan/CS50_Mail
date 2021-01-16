@@ -52,6 +52,7 @@ function compose_email() {
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
   document.querySelector('#recipient-error-msg').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'none';
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
@@ -64,6 +65,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#single-email-view').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -116,5 +118,50 @@ function load_mailbox(mailbox) {
 }
 
 function load_email(emailID) {
-  console.log(emailID);
+
+  // Fetch email
+  fetch('emails/' + emailID)
+  .then(response => response.json())
+  .then(email => {
+    //console.log(email);
+    // Display/hide the correct div
+    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'none';
+    document.querySelector('#single-email-view').style.display = 'block';
+
+    // Creating from, to, ... at top of page
+    const key = ['sender', 'recipients', 'subject', 'timestamp'];
+    const label = ['From:', 'To:', 'Subject:', 'Timestamp:'];
+
+    // From/sender
+    senderDiv = document.createElement('div'); senderDiv.className = 'row';
+    senderLabel = document.createElement('div'); senderLabel.className = 'col-1 textAlignRight'; senderLabel.innerHTML = 'From:';
+    sender = document.createElement('div'); sender.className = 'col-11'; sender.innerHTML = email.sender;
+    senderDiv.append(senderLabel); senderDiv.append(sender)
+
+    // To/recipients
+    recipientsDiv = document.createElement('div'); recipientsDiv.className = 'row';
+    recipientsLabel = document.createElement('div'); recipientsLabel.className = 'col-1 textAlignRight'; recipientsLabel.innerHTML = 'To:';
+    recipients = document.createElement('div'); recipients.className = 'col-11'; recipients.innerHTML = email.recipients;
+    recipientsDiv.append(recipientsLabel); recipientsDiv.append(recipients)
+
+    // Subject/subject
+    // Timestamp/timestamp
+
+
+    document.querySelector('#single-email-view').append(senderDiv);
+    document.querySelector('#single-email-view').append(recipientsDiv);
+
+    // Content/body
+
+    
+
+
+  })
+  .catch(error => {
+    console.log('Error: ', error);
+  });
+
+  // Mark as read
+
 }

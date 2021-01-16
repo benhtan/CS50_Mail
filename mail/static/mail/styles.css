@@ -11,6 +11,10 @@ textarea {
     cursor: pointer;
 }
 
+.textAlignRight {
+    text-align: right;
+}
+
 div {
     white-space: nowrap;
     overflow: hidden;

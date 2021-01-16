@@ -15,6 +15,16 @@ textarea {
     text-align: right;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.emailBody {
+    white-space: pre;
+    overflow-wrap: break-word;
+    border: 1px solid black;
+}
+
 div {
     white-space: nowrap;
     overflow: hidden;

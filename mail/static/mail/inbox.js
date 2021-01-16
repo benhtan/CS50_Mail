@@ -102,7 +102,7 @@ function load_mailbox(mailbox) {
         element.addEventListener('click', () => load_email(email.id));
 
         // Make div for each mailbox column and style it
-        const sender = document.createElement('div'); sender.className = 'col-4'; sender.innerHTML = email.sender;
+        const sender = document.createElement('div'); sender.className = 'col-4 bold'; sender.innerHTML = email.sender;
         const subject = document.createElement('div');  subject.className = 'col-4'; subject.innerHTML = email.subject;
         const timestamp = document.createElement('div');  timestamp.className = 'col-4'; timestamp.style = 'text-align: right;';timestamp.innerHTML = email.timestamp;
 
@@ -124,35 +124,36 @@ function load_email(emailID) {
   .then(response => response.json())
   .then(email => {
     //console.log(email);
+
+    // Empty the main div to render new content
+    document.querySelector('#single-email-view').innerHTML = '';
+
     // Display/hide the correct div
     document.querySelector('#emails-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'none';
     document.querySelector('#single-email-view').style.display = 'block';
 
     // Creating from, to, ... at top of page
-    const key = ['sender', 'recipients', 'subject', 'timestamp'];
-    const label = ['From:', 'To:', 'Subject:', 'Timestamp:'];
+    // keys and labels has to be equal array length
+    const keys = ['sender', 'recipients', 'subject', 'timestamp'];  // has to match API json keys
+    const labels = ['From:', 'To:', 'Subject:', 'Date:'];
 
-    // From/sender
-    senderDiv = document.createElement('div'); senderDiv.className = 'row';
-    senderLabel = document.createElement('div'); senderLabel.className = 'col-1 textAlignRight'; senderLabel.innerHTML = 'From:';
-    sender = document.createElement('div'); sender.className = 'col-11'; sender.innerHTML = email.sender;
-    senderDiv.append(senderLabel); senderDiv.append(sender)
+    for (i = 0, len = keys.length; i < len; i++) {
+      //console.log(i);
+      div = document.createElement('div'); div.className = 'row';
+      label = document.createElement('div'); label.className = 'col-1 textAlignRight bold'; label.innerHTML = labels[i];
+      value = document.createElement('div'); value.className = 'col-11'; value.innerHTML = email[keys[i]];
+      div.append(label); div.append(value)
+      document.querySelector('#single-email-view').append(div);
+    }
 
-    // To/recipients
-    recipientsDiv = document.createElement('div'); recipientsDiv.className = 'row';
-    recipientsLabel = document.createElement('div'); recipientsLabel.className = 'col-1 textAlignRight'; recipientsLabel.innerHTML = 'To:';
-    recipients = document.createElement('div'); recipients.className = 'col-11'; recipients.innerHTML = email.recipients;
-    recipientsDiv.append(recipientsLabel); recipientsDiv.append(recipients)
-
-    // Subject/subject
-    // Timestamp/timestamp
-
-
-    document.querySelector('#single-email-view').append(senderDiv);
-    document.querySelector('#single-email-view').append(recipientsDiv);
+    // Make hr
+    document.querySelector('#single-email-view').append(document.createElement('hr'));
 
     // Content/body
+    emailBody = document.createElement('p'); emailBody.className = 'emailBody';
+    emailBody.innerHTML = email.body;
+    document.querySelector('#single-email-view').append(emailBody);
 
     
 

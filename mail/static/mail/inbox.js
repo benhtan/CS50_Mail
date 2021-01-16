@@ -87,7 +87,7 @@ function load_mailbox(mailbox) {
         }
 
         // create email div and containers and styling
-        const element = document.createElement('div'); element.className = 'row emailBorder';
+        const element = document.createElement('div'); element.className = 'row emailBorder cursorPointer';
 
         // change background color of div wether read or not read
         if (email.read === false) {
@@ -97,7 +97,7 @@ function load_mailbox(mailbox) {
         }
 
         // add event to div so we know it is clicked
-        element.addEventListener('click', console.log('This element has been clicked!'));
+        element.addEventListener('click', () => load_email(email.id));
 
         // Make div for each mailbox column and style it
         const sender = document.createElement('div'); sender.className = 'col-4'; sender.innerHTML = email.sender;
@@ -113,4 +113,8 @@ function load_mailbox(mailbox) {
       
   });
 
+}
+
+function load_email(emailID) {
+  console.log(emailID);
 }

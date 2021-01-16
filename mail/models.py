@@ -24,7 +24,8 @@ class Email(models.Model):
             "subject": self.subject,
             "body": self.body,
             #"timestamp": self.timestamp.strftime("%b %-d %Y, %-I:%M %p"),
-            "timestamp": self.timestamp.strftime("%A, %d. %B %d/%m/%Y %I:%M%p"),
+            #"timestamp": self.timestamp.strftime("%A, %d. %B %d/%m/%Y %I:%M%p"),
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "read": self.read,
             "archived": self.archived
         }

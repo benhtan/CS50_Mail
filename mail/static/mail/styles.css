@@ -12,3 +12,7 @@ div {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+.test {
+    background-color: lightgray;
+}

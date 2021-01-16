@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // event handler when new mail form is submitted
   document.querySelector('#compose-form').onsubmit = function() {
-    console.log(document.querySelector('#compose-recipients').value);
+    //console.log(document.querySelector('#compose-recipients').value);
 
     fetch('/emails', {
       method: 'POST',
@@ -76,15 +76,38 @@ function load_mailbox(mailbox) {
       // Print emails
       // console.log(emails);
       emails.forEach(function(email){
+        // if inbox is requested and email should be in archive then skip
+        if (mailbox === 'inbox' && email.archive === true) {
+          return;
+        }
+
+        // if archive is requested and email is not in archive then skip
+        if (mailbox === 'archive' && email.archive === false) {
+          return;
+        }
+
+        // create email div and containers and styling
         const element = document.createElement('div'); element.className = 'row emailBorder';
+
+        // change background color of div wether read or not read
+        if (email.read === false) {
+          element.style = 'background-color: white;';
+        } else {
+          element.style = 'background-color: lightgray;';
+        }
+
+        // add event to div so we know it is clicked
+        element.addEventListener('click', console.log('This element has been clicked!'));
+
+        // Make div for each mailbox column and style it
         const sender = document.createElement('div'); sender.className = 'col-4'; sender.innerHTML = email.sender;
         const subject = document.createElement('div');  subject.className = 'col-4'; subject.innerHTML = email.subject;
         const timestamp = document.createElement('div');  timestamp.className = 'col-4'; timestamp.style = 'text-align: right;';timestamp.innerHTML = email.timestamp;
 
+        // add each column to the main element div        
         element.append(sender); element.append(subject); element.append(timestamp);
-        //element.innerHTML = `${email.sender}    ${email.subject}    ${email.timestamp}`;
         document.querySelector('#emails-view').append(element);
-        //console.log(email.subject);
+        //console.log(email);
       });
 
       

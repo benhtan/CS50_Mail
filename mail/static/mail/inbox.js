@@ -51,6 +51,7 @@ function compose_email() {
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
+  document.querySelector('#recipient-error-msg').style.display = 'none';
 
   // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
@@ -66,4 +67,27 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // Fetch mailbox
+  // console.log('/emails/' + mailbox)
+  fetch('/emails/' + mailbox)
+  .then(response => response.json())
+  .then(emails => {
+      // Print emails
+      // console.log(emails);
+      emails.forEach(function(email){
+        const element = document.createElement('div'); element.className = 'row emailBorder';
+        const sender = document.createElement('div'); sender.className = 'col-4'; sender.innerHTML = email.sender;
+        const subject = document.createElement('div');  subject.className = 'col-4'; subject.innerHTML = email.subject;
+        const timestamp = document.createElement('div');  timestamp.className = 'col-4'; timestamp.style = 'text-align: right;';timestamp.innerHTML = email.timestamp;
+
+        element.append(sender); element.append(subject); element.append(timestamp);
+        //element.innerHTML = `${email.sender}    ${email.subject}    ${email.timestamp}`;
+        document.querySelector('#emails-view').append(element);
+        //console.log(email.subject);
+      });
+
+      
+  });
+
 }

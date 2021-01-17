@@ -138,11 +138,12 @@ function load_email(emailID) {
     const keys = ['sender', 'recipients', 'subject', 'timestamp'];  // has to match API json keys
     const labels = ['From:', 'To:', 'Subject:', 'Date:'];
 
+    // for each keys and label, create bootstrap grid and inside elements
     for (i = 0, len = keys.length; i < len; i++) {
       //console.log(i);
       div = document.createElement('div'); div.className = 'row';
-      label = document.createElement('div'); label.className = 'col-1 textAlignRight bold'; label.innerHTML = labels[i];
-      value = document.createElement('div'); value.className = 'col-11'; value.innerHTML = email[keys[i]];
+      label = document.createElement('div'); label.className = 'col-xl-1 col-lg-1 col-md-2 col-sm-3 col-3 textAlignRight bold'; label.innerHTML = labels[i];
+      value = document.createElement('div'); value.className = 'col-xl-11 col-lg-11 col-md-10 col-sm-9 col-9'; value.innerHTML = email[keys[i]];
       div.append(label); div.append(value)
       document.querySelector('#single-email-view').append(div);
     }
@@ -154,10 +155,6 @@ function load_email(emailID) {
     emailBody = document.createElement('p'); emailBody.className = 'emailBody';
     emailBody.innerHTML = email.body;
     document.querySelector('#single-email-view').append(emailBody);
-
-    
-
-
   })
   .catch(error => {
     console.log('Error: ', error);

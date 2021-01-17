@@ -20,9 +20,8 @@ textarea {
 }
 
 .emailBody {
-    white-space: pre;
-    overflow-wrap: break-word;
-    border: 1px solid black;
+    white-space: pre-wrap;
+    text-align: justify;
 }
 
 div {

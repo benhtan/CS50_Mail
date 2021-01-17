@@ -163,7 +163,11 @@ function load_email(emailID) {
     //add event listener to reply button and call compose_email with filled in fields (modifed)
     replyButton.addEventListener('click', function() {
       // compose email with modified fields when reply button is clicked
-      compose_email(email.sender, add_re(email.subject),'\n\nOn ' + email.timestamp + ' ' + email.sender + ' wrote:\n\n' + email.body);
+      compose_email(
+        email.sender, 
+        add_re(email.subject),
+        '\n\n########################################\nOn ' + email.timestamp + ' ' + email.sender + ' wrote:\n\n' + email.body
+        );
 
       // focus cursor on body field and set it to beginning
       document.querySelector('#compose-body').focus(); 

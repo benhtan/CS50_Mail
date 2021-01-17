@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (result.error === undefined){
           load_mailbox('sent');
         } else {
+          // display error at #recipient-error-msg div and focus on #compose-recipients
           document.querySelector('#recipient-error-msg').innerHTML = result.error;
           document.querySelector('#recipient-error-msg').style.display = 'block';
           document.querySelector('#compose-recipients').focus();
@@ -77,6 +78,8 @@ function load_mailbox(mailbox) {
   .then(emails => {
       // Print emails
       // console.log(emails);
+
+      // do this forEach email
       emails.forEach(function(email){
         // if inbox is requested and email should be in archive then skip
         if (mailbox === 'inbox' && email.archive === true) {
@@ -98,7 +101,7 @@ function load_mailbox(mailbox) {
           element.style = 'background-color: lightgray;';
         }
 
-        // add event to div so we know it is clicked
+        // add event to div so we know it is clicked and open that single email
         element.addEventListener('click', () => load_email(email.id));
 
         // Make div for each mailbox column and style it
@@ -117,6 +120,7 @@ function load_mailbox(mailbox) {
 
 }
 
+// will load the right email and view it. mark it as read
 function load_email(emailID) {
 
   // Fetch email
@@ -144,9 +148,33 @@ function load_email(emailID) {
       div = document.createElement('div'); div.className = 'row';
       label = document.createElement('div'); label.className = 'col-xl-1 col-lg-1 col-md-2 col-sm-3 col-3 textAlignRight bold'; label.innerHTML = labels[i];
       value = document.createElement('div'); value.className = 'col-xl-11 col-lg-11 col-md-10 col-sm-9 col-9'; value.innerHTML = email[keys[i]];
-      div.append(label); div.append(value)
+      div.append(label); div.append(value);
       document.querySelector('#single-email-view').append(div);
     }
+
+    // make move/remove from archive button
+    // create bootstrap row grid
+    div = document.createElement('div'); div.className = 'row  archiveReplyDiv';
+
+    // create button with bootstrap style
+    archiveButton = document.createElement('button'); archiveButton.className = 'btn btn-sm btn-outline-primary archiveReplyButton';    
+
+    // decide wether to remove/add to archive
+    if (email.archived) {
+      archiveButton.innerHTML = 'Move to Inbox';
+      // add event listener. when clicked, flip the bool of email.archived
+      archiveButton.addEventListener('click', () => change_archived_state(emailID, !email.archived));
+    } else {
+      archiveButton.innerHTML = 'Move to Archive';
+      // add event listener. when clicked, flip the bool of email.archived
+      archiveButton.addEventListener('click', () => change_archived_state(emailID, !email.archived));
+    }
+
+    // append button to row div
+    div.append(archiveButton);
+
+    // append to single email view
+    document.querySelector('#single-email-view').append(div);
 
     // Make hr
     document.querySelector('#single-email-view').append(document.createElement('hr'));
@@ -161,5 +189,35 @@ function load_email(emailID) {
   });
 
   // Mark as read
+  mark_as_read(emailID);
+}
 
+function mark_as_read(emailID) {
+  //console.log('please mark as read');
+
+  fetch('/emails/'+emailID, {
+    method: 'PUT',
+    body: JSON.stringify({
+        read: true
+    })
+  })
+  .catch(error => {
+    console.log('Error: ', error);
+  });
+}
+
+function change_archived_state(emailID, state) {
+  //console.log('change archive state');
+  //console.log(state);
+
+  fetch('/emails/'+emailID, {
+    method: 'PUT',
+    body: JSON.stringify({
+        archived: state
+    })
+  })
+  .then(load_mailbox('inbox'))
+  .catch(error => {
+    console.log('Error: ', error);
+  });
 }

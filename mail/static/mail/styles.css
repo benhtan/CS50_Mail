@@ -24,6 +24,14 @@ textarea {
     text-align: justify;
 }
 
+.archiveReplyDiv{
+    margin-top: 15px;
+}
+
+.archiveReplyButton {
+    margin: 10px;
+}
+
 div {
     white-space: nowrap;
     overflow: hidden;

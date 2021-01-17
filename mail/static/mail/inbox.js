@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', compose_email);
+  document.querySelector('#compose').addEventListener('click', () => compose_email());
 
   // Find #recipient-error-msg and don't display it
   document.querySelector('#recipient-error-msg').style.display = 'none';
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 });
 
-function compose_email() {
+function compose_email(recipients_var = '', subject_var = '', body_var = '') {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
@@ -56,9 +56,9 @@ function compose_email() {
   document.querySelector('#single-email-view').style.display = 'none';
 
   // Clear out composition fields
-  document.querySelector('#compose-recipients').value = '';
-  document.querySelector('#compose-subject').value = '';
-  document.querySelector('#compose-body').value = '';
+  document.querySelector('#compose-recipients').value = recipients_var;
+  document.querySelector('#compose-subject').value = subject_var;
+  document.querySelector('#compose-body').value = body_var;
 }
 
 function load_mailbox(mailbox) {
@@ -158,6 +158,14 @@ function load_email(emailID) {
 
     // create button with bootstrap style
     archiveButton = document.createElement('button'); archiveButton.className = 'btn btn-sm btn-outline-primary archiveReplyButton';    
+    replyButton = document.createElement('button'); replyButton.className = 'btn btn-sm btn-outline-primary archiveReplyButton'; replyButton.innerHTML = 'Reply';
+    
+    //add event listener to reply button and call compose_email with filled in fields (modifed)
+    replyButton.addEventListener('click', () => compose_email(
+      email.sender, 
+      add_re(email.subject),
+      email.body
+      ));
 
     // decide wether to remove/add to archive
     if (email.archived) {
@@ -171,7 +179,8 @@ function load_email(emailID) {
     }
 
     // append button to row div
-    div.append(archiveButton);
+    div.append(replyButton);
+    div.append(archiveButton); 
 
     // append to single email view
     document.querySelector('#single-email-view').append(div);
@@ -220,4 +229,13 @@ function change_archived_state(emailID, state) {
   .catch(error => {
     console.log('Error: ', error);
   });
+}
+
+function add_re(subject) {
+  let toAdd = 'Re: ';
+  if (subject.indexOf(toAdd) === 0) {
+    return subject;
+  }
+
+  return toAdd + subject;
 }

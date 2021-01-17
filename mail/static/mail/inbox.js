@@ -166,7 +166,9 @@ function load_email(emailID) {
       compose_email(email.sender, add_re(email.subject),'\n\nOn ' + email.timestamp + ' ' + email.sender + ' wrote:\n\n' + email.body);
 
       // focus cursor on body field and set it to beginning
-      document.querySelector('#compose-body').focus(); document.querySelector('#compose-body').setSelectionRange(0,0);
+      document.querySelector('#compose-body').focus(); 
+      document.querySelector('#compose-body').setSelectionRange(0,0);
+      document.querySelector('#compose-body').scrollTop = 0;
     });
 
     // decide wether to remove/add to archive

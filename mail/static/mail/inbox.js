@@ -152,20 +152,22 @@ function load_email(emailID) {
       document.querySelector('#single-email-view').append(div);
     }
 
-    // make move/remove from archive button
+    // make move/remove from archive and reply
     // create bootstrap row grid
     div = document.createElement('div'); div.className = 'row  archiveReplyDiv';
 
-    // create button with bootstrap style
+    // create archive and reply button with bootstrap style
     archiveButton = document.createElement('button'); archiveButton.className = 'btn btn-sm btn-outline-primary archiveReplyButton';    
     replyButton = document.createElement('button'); replyButton.className = 'btn btn-sm btn-outline-primary archiveReplyButton'; replyButton.innerHTML = 'Reply';
     
     //add event listener to reply button and call compose_email with filled in fields (modifed)
-    replyButton.addEventListener('click', () => compose_email(
-      email.sender, 
-      add_re(email.subject),
-      email.body
-      ));
+    replyButton.addEventListener('click', function() {
+      // compose email with modified fields when reply button is clicked
+      compose_email(email.sender, add_re(email.subject),'\n\nOn ' + email.timestamp + ' ' + email.sender + ' wrote:\n\n' + email.body);
+
+      // focus cursor on body field and set it to beginning
+      document.querySelector('#compose-body').focus(); document.querySelector('#compose-body').setSelectionRange(0,0);
+    });
 
     // decide wether to remove/add to archive
     if (email.archived) {

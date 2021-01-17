@@ -216,7 +216,7 @@ function change_archived_state(emailID, state) {
         archived: state
     })
   })
-  .then(load_mailbox('inbox'))
+  .then(() => load_mailbox('inbox'))
   .catch(error => {
     console.log('Error: ', error);
   });
